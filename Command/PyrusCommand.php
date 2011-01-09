@@ -32,10 +32,23 @@ class PyrusCommand extends Command
             ->setDefinition($this->inputDefinition);
     }
 
+    protected function getPyrusDir()
+    {
+        $bundleDirs = $this->application->getKernel()->getBundleDirs();
+
+        if (!isset($bundleDirs['Bundle'])) {
+            throw new \RunTimeException("No BundleDir for namespace Bundle defined in Application Kernel.");
+        }
+
+        return $bundleDirs['Bundle'];
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tokens = $this->inputDefinition->getTokens($input);
-        echo implode(", ", $tokens) . "\n";
+        array_shift($tokens); // remove pyrus
+
+        $tokens = array_merge(array('pyrus.phar', $this->getPyrusDir()), $tokens);
 
         $_SERVER['argv'] = $tokens;
         $_SERVER['argc'] = count($tokens);
