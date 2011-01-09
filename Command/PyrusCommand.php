@@ -48,11 +48,19 @@ class PyrusCommand extends Command
         $tokens = $this->inputDefinition->getTokens($input);
         array_shift($tokens); // remove pyrus
 
-        $tokens = array_merge(array('pyrus.phar', $this->getPyrusDir()), $tokens);
+        array_unshift($tokens, $this->getPyrusDir());
 
-        $_SERVER['argv'] = $tokens;
-        $_SERVER['argc'] = count($tokens);
-
-        include __DIR__ . "/../pyrus.phar";
+        spl_autoload_register(array($this, 'pyrus_autoload'));
+        $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
+        $frontend->run($tokens);
     }
+
+    function pyrus_autoload($class)
+    {
+        $class = str_replace(array('_','\\'), '/', $class);
+        if (file_exists('phar://' . __DIR__ . '/../pyrus.phar/PEAR2_Pyrus-2.0.0a2/php/' . $class . '.php')) {
+            include 'phar://' . __DIR__ . '/../pyrus.phar/PEAR2_Pyrus-2.0.0a2/php/' . $class . '.php';
+        }
+    }
+
 }
