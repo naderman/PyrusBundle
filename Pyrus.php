@@ -60,10 +60,10 @@ class Pyrus
     }
 
     /**
-    * The Pyrus autoloader taking classes from the phar file within this Bundle.
-    *
-    * @param string $class The class name
-    */
+     * The Pyrus autoloader taking classes from the phar file within this Bundle.
+     *
+     * @param string $class The class name
+     */
     public function pyrus_autoload($class)
     {
         $class = str_replace(array('_','\\'), '/', $class);

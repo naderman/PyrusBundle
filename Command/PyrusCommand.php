@@ -24,6 +24,9 @@ class PyrusCommand extends Command
 {
     protected $inputDefinition;
 
+    /**
+     * Configures this command to accept arbitrary options and arguments.
+     */
     protected function configure()
     {
         $this->inputDefinition = new ArbitraryInputDefinition;
@@ -33,6 +36,12 @@ class PyrusCommand extends Command
             ->setDefinition($this->inputDefinition);
     }
 
+    /**
+     * Passes the given options and arguments to Pyrus for execution
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $tokens = $this->inputDefinition->getTokens($input);
