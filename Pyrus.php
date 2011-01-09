@@ -17,16 +17,82 @@ use Symfony\Component\HttpKernel\Kernel;
 class Pyrus
 {
     protected $kernel;
+    protected $frontend;
+    protected $config;
 
     /**
      * Sets Pyrus up for later use
      *
      * @param Kernel $kernel The application's kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
     {
+        if (!$frontend) {
+            spl_autoload_register(array($this, 'pyrus_autoload'));
+            $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
+        }
+
         $this->kernel = $kernel;
-        spl_autoload_register(array($this, 'pyrus_autoload'));
+        $this->frontend = $frontend;
+
+        $configclass = $frontend::$configclass;
+        $this->config = $configclass::singleton($this->getPyrusDir());
+
+        $this->setupPyrus();
+    }
+
+    public function setupPyrus()
+    {
+        $settings = array(
+            //'php_dir' => '@php_dir@',
+            'ext_dir' => '@php_dir@/pyrus/ext',
+            'doc_dir' => '@php_dir@/pyrus/docs',
+            'bin_dir' => $this->kernel->getRootDir() . '/bin',
+            //'data_dir' => '@php_dir@/pyrus/data',
+            'cfg_dir' => '@php_dir@/pyrus/cfg',
+            'www_dir' => $this->kernel->getRootDir() . '/web',
+            'test_dir' => '@php_dir@/pyrus/tests',
+            'src_dir' => '@php_dir@/pyrus/src',
+            'auto_discover' => 1,
+            'cache_dir' => '@php_dir@/pyrus/cache',
+            'temp_dir' => '@php_dir@/pyrus/temp',
+            'download_dir' => '@php_dir@/pyrus/downloads',
+            'plugins_dir' => '@default_config_dir@',
+        );
+
+        $options = array('plugin' => false);
+
+        foreach ($settings as $name => $desiredValue) {
+            $currentValue = $this->getConfig($name);
+
+            if ($currentValue != $desiredValue) {
+                $this->setConfig($name, $desiredValue);
+            }
+        }
+    }
+
+    /**
+     * Retrieves a value from the Pyrus configuration.
+     *
+     * @param  string $name The variable name
+     * @return mixed        The configuration value
+     */
+    public function getConfig($name)
+    {
+        $this->config = \PEAR2\Pyrus\Config::current();
+        return $this->config->__get($name);
+    }
+
+    /**
+     * Overwrites a configuration value.
+     *
+     * @param  string $name  The variable name
+     * @param  mixed  $value New value
+     */
+    public function setConfig($name, $value)
+    {
+        $this->config->__set($name, $value);
+        $this->config->saveConfig();
     }
 
     /**
@@ -55,8 +121,7 @@ class Pyrus
     {
         array_unshift($argv, $this->getPyrusDir());
 
-        $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
-        $frontend->run($argv);
+        $this->frontend->run($argv);
     }
 
     /**
