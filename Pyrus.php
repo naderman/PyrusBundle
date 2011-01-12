@@ -28,6 +28,10 @@ class Pyrus
     public function __construct(Kernel $kernel, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
     {
         if (!$frontend) {
+            if (file_exists(__DIR__ . '/pyrus')) {
+                spl_autoload_register(array($this, 'pyrus_src_autoload'));
+            }
+
             spl_autoload_register(array($this, 'pyrus_autoload'));
             $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
         }
@@ -42,39 +46,37 @@ class Pyrus
 
     public function setupPyrus()
     {
-        if (!file_exists($this->getPearConfig()))
-        {
-            $config->saveConfig($this->getPearConfig());
-        }
-/*
-        $settings = array(
-            //'php_dir' => '@php_dir@',
-            'ext_dir' => '@php_dir@/pyrus/ext',
-            'doc_dir' => '@php_dir@/pyrus/docs',
-            'bin_dir' => $this->kernel->getRootDir() . '/bin',
-            //'data_dir' => '@php_dir@/pyrus/data',
-            'cfg_dir' => '@php_dir@/pyrus/cfg',
-            'www_dir' => $this->kernel->getRootDir() . '/web',
-            'test_dir' => '@php_dir@/pyrus/tests',
-            'src_dir' => '@php_dir@/pyrus/src',
-            'auto_discover' => 1,
-            'cache_dir' => '@php_dir@/pyrus/cache',
-            'temp_dir' => '@php_dir@/pyrus/temp',
-            'download_dir' => '@php_dir@/pyrus/downloads',
-            'plugins_dir' => '@default_config_dir@',
-        );
+        if (!file_exists($this->getPearConfig())) {
+            $settings = array(
+                //'php_dir' => '@php_dir@',
+                //'ext_dir' => '@php_dir@/pyrus/ext',
+                //'doc_dir' => '@php_dir@/pyrus/docs',
+                'bin_dir' => $this->kernel->getRootDir() . '/bin',
+                //'data_dir' => '@php_dir@/pyrus/data',
+                //'cfg_dir' => '@php_dir@/pyrus/cfg',
+                'www_dir' => $this->kernel->getRootDir() . '/web',
+                //'test_dir' => '@php_dir@/pyrus/tests',
+                //'src_dir' => '@php_dir@/pyrus/src',
+                'auto_discover' => 1,
+                //'cache_dir' => '@php_dir@/pyrus/cache',
+                //'temp_dir' => '@php_dir@/pyrus/temp',
+                //'download_dir' => '@php_dir@/pyrus/downloads',
+                //'plugins_dir' => '@default_config_dir@',
+            );
 
-        $options = array('plugin' => false);
+            $options = array('plugin' => false);
 
-        foreach ($settings as $name => $desiredValue) {
-            $currentValue = $this->getConfig($name);
+            foreach ($settings as $name => $desiredValue) {
+                $currentValue = $this->getConfig($name);
 
-            if ($currentValue != $desiredValue) {
-                $this->setConfig($name, $desiredValue);
+                if ($currentValue != $desiredValue) {
+                    $this->setConfig($name, $desiredValue);
+                }
             }
-        }*/
 
-        $this->installCustomRole();
+            $this->config->saveConfig($this->getPearConfig());
+            $this->installCustomRole();
+        }
     }
 
     /**
@@ -114,7 +116,7 @@ class Pyrus
         $pf->files['bundle.xml'] = array(
             'attribs' => array('role' => 'customrole'),
         );
-        $pf->files['PyrusBundlePlugin/BundleRole.php'] = array(
+        $pf->files['PyrusBundlePlugin/Role/Bundle.php'] = array(
             'attribs' => array('role' => 'php'),
         );
 
@@ -189,8 +191,28 @@ class Pyrus
     public function pyrus_autoload($class)
     {
         $class = str_replace(array('_','\\'), '/', $class);
-        if (file_exists('phar://' . __DIR__ . '/pyrus.phar/PEAR2_Pyrus-2.0.0a2/php/' . $class . '.php')) {
-            include 'phar://' . __DIR__ . '/pyrus.phar/PEAR2_Pyrus-2.0.0a2/php/' . $class . '.php';
+        $path = 'phar://' . __DIR__ . '/pyrus.phar/PEAR2_Pyrus-2.0.0a2/php/' . $class . '.php';
+
+        if (file_exists($path)) {
+            include $path;
+        } else {
+            $path = $this->getPyrusDir() . '/php/' . $class . '.php';
+            include $path;
+        }
+    }
+
+    /**
+     * Pyrus autoloader for source package of Pyrus, useful for debugging.
+     *
+     * @param string $class The class name
+     */
+    public function pyrus_src_autoload($class)
+    {
+        $class = str_replace(array('_','\\'), '/', $class);
+        $path = __DIR__ . '/pyrus/src/' . str_replace('PEAR2/', '', $class) . '.php';
+
+        if (file_exists($path)) {
+            include $path;
         }
     }
 }

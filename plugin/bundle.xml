@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <role version="2.0" xmlns="http://pear2.php.net/dtd/customrole-2.0">
  <name>bundle</name>
- <class>PyrusBundlePlugin\BundleRole</class>
+ <class>PyrusBundlePlugin\Role\Bundle</class>
  <autoloadpath></autoloadpath>
  <releasetypes>php</releasetypes>
  <releasetypes>extsrc</releasetypes>

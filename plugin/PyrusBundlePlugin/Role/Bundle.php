@@ -11,5 +11,5 @@
 /**
  * bundle role
  */
-namespace PEAR2\Pyrus\Installer\Role;
-class Php extends \PEAR2\Pyrus\Installer\Role\Common {}
+namespace PyrusBundlePlugin\Role;
+class Bundle extends \PEAR2\Pyrus\Installer\Role\Common {}
