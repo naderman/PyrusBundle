@@ -28,7 +28,7 @@ class Pyrus
     public function __construct(Kernel $kernel, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
     {
         if (!$frontend) {
-            if (file_exists(__DIR__ . '/pyrus')) {
+            if (file_exists(__DIR__ . '/../../../../../PEAR2_Pyrus')) {
                 spl_autoload_register(array($this, 'pyrus_src_autoload'));
             }
 
@@ -39,44 +39,58 @@ class Pyrus
         $this->kernel = $kernel;
         $this->frontend = $frontend;
 
-        $this->config = \PEAR2\Pyrus\Config::singleton($this->getPyrusDir(), $this->getPearConfig());
+        $this->readConfig(\PEAR2\Pyrus\Config::singleton($this->getPyrusDir(), $this->getPearConfig()));
 
         $this->setupPyrus();
+    }
+
+    public function readConfig()
+    {
+        $this->config = \PEAR2\Pyrus\Config::singleton($this->getPyrusDir(), $this->getPearConfig());
+        $this->config->pluginregistry->scan();
     }
 
     public function setupPyrus()
     {
         if (!file_exists($this->getPearConfig())) {
-            $settings = array(
-                //'php_dir' => '@php_dir@',
-                //'ext_dir' => '@php_dir@/pyrus/ext',
-                //'doc_dir' => '@php_dir@/pyrus/docs',
-                'bin_dir' => $this->kernel->getRootDir() . '/bin',
-                //'data_dir' => '@php_dir@/pyrus/data',
-                //'cfg_dir' => '@php_dir@/pyrus/cfg',
-                'www_dir' => $this->kernel->getRootDir() . '/web',
-                //'test_dir' => '@php_dir@/pyrus/tests',
-                //'src_dir' => '@php_dir@/pyrus/src',
-                'auto_discover' => 1,
-                //'cache_dir' => '@php_dir@/pyrus/cache',
-                //'temp_dir' => '@php_dir@/pyrus/temp',
-                //'download_dir' => '@php_dir@/pyrus/downloads',
-                //'plugins_dir' => '@default_config_dir@',
-            );
-
-            $options = array('plugin' => false);
-
-            foreach ($settings as $name => $desiredValue) {
-                $currentValue = $this->getConfig($name);
-
-                if ($currentValue != $desiredValue) {
-                    $this->setConfig($name, $desiredValue);
-                }
-            }
-
             $this->config->saveConfig($this->getPearConfig());
+            $this->readConfig();
+
             $this->installCustomRole();
         }
+
+        // reset these paths every time, to allow moving the symfony directory
+        // around
+        // TODO: replace with configurable parameters
+        $settings = array(
+            //'php_dir' => '@php_dir@',
+            //'ext_dir' => '@php_dir@/pyrus/ext',
+            //'doc_dir' => '@php_dir@/pyrus/docs',
+            'bin_dir' => $this->kernel->getRootDir() . '/bin',
+            //'data_dir' => '@php_dir@/pyrus/data',
+            //'cfg_dir' => '@php_dir@/pyrus/cfg',
+            'www_dir' => $this->kernel->getRootDir() . '/web',
+            //'test_dir' => '@php_dir@/pyrus/tests',
+            //'src_dir' => '@php_dir@/pyrus/src',
+            'auto_discover' => 1,
+            //'cache_dir' => '@php_dir@/pyrus/cache',
+            //'temp_dir' => '@php_dir@/pyrus/temp',
+            //'download_dir' => '@php_dir@/pyrus/downloads',
+            //'plugins_dir' => '@default_config_dir@',
+
+            'bundle_dir' => $this->getBundleDir(),
+        );
+
+        $options = array('plugin' => false);
+
+        foreach ($settings as $name => $desiredValue) {
+            $currentValue = $this->getConfig($name);
+
+            if ($currentValue != $desiredValue) {
+                $this->setConfig($name, $desiredValue);
+            }
+        }
+        $this->readConfig();
     }
 
     /**
@@ -113,7 +127,7 @@ class Pyrus
         $pf->description = 'Description';
         $pf->notes = 'My Notes';
         $pf->maintainer['naderman']->role('lead')->email('naderman@phpbb.com')->active('yes')->name('Nils Adermann');
-        $pf->files['bundle.xml'] = array(
+        $pf->files['Bundle.xml'] = array(
             'attribs' => array('role' => 'customrole'),
         );
         $pf->files['PyrusBundlePlugin/Role/Bundle.php'] = array(
@@ -132,6 +146,8 @@ class Pyrus
         \PEAR2\Pyrus\Installer::begin();
         \PEAR2\Pyrus\Installer::prepare($package);
         \PEAR2\Pyrus\Installer::commit();
+
+        $this->readConfig();
     }
 
     /**
@@ -209,7 +225,7 @@ class Pyrus
     public function pyrus_src_autoload($class)
     {
         $class = str_replace(array('_','\\'), '/', $class);
-        $path = __DIR__ . '/pyrus/src/' . str_replace('PEAR2/', '', $class) . '.php';
+        $path = __DIR__ . '/../../../../../PEAR2_Pyrus/src/' . str_replace('PEAR2/', '', $class) . '.php';
 
         if (file_exists($path)) {
             include $path;

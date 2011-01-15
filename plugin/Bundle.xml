@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <role version="2.0" xmlns="http://pear2.php.net/dtd/customrole-2.0">
- <name>bundle</name>
+ <name>Bundle</name>
  <class>PyrusBundlePlugin\Role\Bundle</class>
- <autoloadpath></autoloadpath>
  <releasetypes>php</releasetypes>
  <releasetypes>extsrc</releasetypes>
  <releasetypes>extbin</releasetypes>
@@ -10,13 +9,13 @@
  <releasetypes>zendextbin</releasetypes>
  <installable>1</installable>
  <locationconfig>bundle_dir</locationconfig>
- <honorsbaseinstall />
- <unusualbaseinstall>1</unusualbaseinstall>
+ <honorsbaseinstall>1</honorsbaseinstall>
+ <unusualbaseinstall />
  <executable />
  <configvar>
   <name>bundle_dir</name>
   <type>string</type>
-  <default>../Bundle/</default>
+  <default>Bundle</default>
   <doc>The Symfony2 Bundle directory.</doc>
   <prompt>Symfony2 Bundle directory</prompt>
   <group>PyrusBundle</group>
