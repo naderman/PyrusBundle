@@ -27,6 +27,12 @@ class Pyrus
      */
     public function __construct(Kernel $kernel, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
     {
+        $this->kernel = $kernel;
+
+        if (!file_exists($this->getPyrusDir())) {
+            mkdir($this->getPyrusDir(), 0777, true);
+        }
+
         if (!$frontend) {
             if (file_exists(__DIR__ . '/../../../../../PEAR2_Pyrus')) {
                 spl_autoload_register(array($this, 'pyrus_src_autoload'));
@@ -36,11 +42,9 @@ class Pyrus
             $frontend = new \PEAR2\Pyrus\ScriptFrontend\Commands;
         }
 
-        $this->kernel = $kernel;
         $this->frontend = $frontend;
 
         $this->readConfig(\PEAR2\Pyrus\Config::singleton($this->getPyrusDir(), $this->getPearConfig()));
-
         $this->setupPyrus();
     }
 
@@ -157,7 +161,7 @@ class Pyrus
      */
     public function getPyrusDir()
     {
-        return $this->kernel->getRootDir() . '/../src/vendor';
+        return $this->kernel->getRootDir() . '/../vendor/pyrus/';
     }
 
     /**
