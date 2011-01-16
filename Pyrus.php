@@ -67,7 +67,6 @@ class Pyrus
         // around
         // TODO: replace with configurable parameters
         $settings = array(
-            //'php_dir' => '@php_dir@',
             //'ext_dir' => '@php_dir@/pyrus/ext',
             //'doc_dir' => '@php_dir@/pyrus/docs',
             'bin_dir' => $this->kernel->getRootDir() . '/bin',
@@ -161,7 +160,7 @@ class Pyrus
      */
     public function getPyrusDir()
     {
-        return $this->kernel->getRootDir() . '/../vendor/pyrus/';
+        return $this->kernel->getRootDir() . '/../pear2/';
     }
 
     /**
