@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\Phpbb\PyrusBundle\Command;
+namespace Bundle\phpBB\PyrusBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

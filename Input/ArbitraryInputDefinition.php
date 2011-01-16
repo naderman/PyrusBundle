@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\Phpbb\PyrusBundle\Input;
+namespace Bundle\phpBB\PyrusBundle\Input;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
