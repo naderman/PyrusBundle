@@ -14,8 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Bundle\Phpbb\PyrusBundle\Input\ArbitraryInputDefinition;
-use Bundle\Phpbb\PyrusBundle\Pyrus;
+use Bundle\phpBB\PyrusBundle\Input\ArbitraryInputDefinition;
+use Bundle\phpBB\PyrusBundle\Pyrus;
 
 /**
  * Pyrus command
