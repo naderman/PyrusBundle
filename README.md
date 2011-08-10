@@ -14,10 +14,10 @@ Ever needed to use PEAR packages with Symfony2? This bundle gives you a helping 
 
 2. Update your autoload.php, add the Pyrus bundle:
 
-     $loader->registerNamespaces(array(
-       ...
-       'phpBB\\PyrusBundle' => __DIR__.'/../vendor/bundles',
-     ));
+         $loader->registerNamespaces(array(
+           ...
+           'phpBB\\PyrusBundle' => __DIR__.'/../vendor/bundles',
+         ));
 
 3. Update your AppKernel with the new bundle:
 
