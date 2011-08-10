@@ -8,22 +8,22 @@ Ever needed to use PEAR packages with Symfony2? This bundle gives you a helping 
 
 1. Add the bundle to deps:
 
-     [PyrusBundle]
-       git=git@github.com:tarjei/PyrusBundle.git
-       target=/bundles/phpBB/PyrusBundle
+       [PyrusBundle]
+         git=git@github.com:tarjei/PyrusBundle.git
+         target=/bundles/phpBB/PyrusBundle
 
 2. Update your autoload.php, add the Pyrus bundle:
 
-         $loader->registerNamespaces(array(
-           ...
-           'phpBB\\PyrusBundle' => __DIR__.'/../vendor/bundles',
-         ));
+       $loader->registerNamespaces(array(
+         ...
+         'phpBB\\PyrusBundle' => __DIR__.'/../vendor/bundles',
+       ));
 
 3. Update your AppKernel with the new bundle:
 
-     if ( PHP_SAPI == 'cli' ) {
-       $bundles[] = new phpBB\PyrusBundle\phpBBPyrusBundle();
-     }
+       if ( PHP_SAPI == 'cli' ) {
+         $bundles[] = new phpBB\PyrusBundle\phpBBPyrusBundle();
+       }
 
 4. Now you should have a new pyrus command:
 
