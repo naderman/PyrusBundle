@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\phpBB\PyrusBundle\Input;
+namespace phpBB\PyrusBundle\Input;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -29,6 +29,7 @@ class ArbitraryInputDefinition extends InputDefinition
     {
         $this->arg = 0;
         $this->definition = array();
+        $this->options = array( ); 
     }
 
     public function getArguments()

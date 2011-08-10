@@ -8,19 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\phpBB\PyrusBundle\Command;
+namespace phpBB\PyrusBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use Bundle\phpBB\PyrusBundle\Input\ArbitraryInputDefinition;
-use Bundle\phpBB\PyrusBundle\Pyrus;
+use Symfony\Component\DependencyInjection\Container;
+use phpBB\PyrusBundle\Input\ArbitraryInputDefinition;
+use phpBB\PyrusBundle\Pyrus;
 
 /**
  * Pyrus command
  */
-class PyrusCommand extends Command
+class PyrusCommand extends ContainerAwareCommand
 {
     protected $inputDefinition;
 
@@ -46,8 +46,7 @@ class PyrusCommand extends Command
     {
         $tokens = $this->inputDefinition->getTokens($input);
         array_shift($tokens); // remove pyrus
-
-        $pyrus = new Pyrus($this->application->getKernel());
+        $pyrus = new Pyrus($this->getContainer( ));
         $pyrus->run($tokens);
     }
 }
