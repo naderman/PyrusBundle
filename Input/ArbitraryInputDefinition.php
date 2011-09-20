@@ -32,6 +32,11 @@ class ArbitraryInputDefinition extends InputDefinition
         $this->options = array( ); 
     }
 
+    public function getSynopsis() {
+        
+        return "Dummy - command should provide a propper one";
+    }
+
     public function getArguments()
     {
         return array();
