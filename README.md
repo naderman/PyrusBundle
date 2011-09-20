@@ -33,7 +33,7 @@ Ever needed to use PEAR packages with Symfony2? This bundle gives you a helping 
 
 To install your dependencies, you first use pyrus to install the dependency and then add it to autoload.php:
 
-     app/console pyrus pear/Net_Url2-beta
+     app/console pyrus install pear/Net_Url2-beta
 
 And in autoload.php:
 
