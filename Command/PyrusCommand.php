@@ -32,7 +32,8 @@ class PyrusCommand extends ContainerAwareCommand
         $this->inputDefinition = new ArbitraryInputDefinition;
 
         $this
-            ->setName('pyrus')
+            ->setName('pyrus:pyrus')
+            ->setDescription("Run arbitary pyrus commands")
             ->setDefinition($this->inputDefinition);
     }
 
