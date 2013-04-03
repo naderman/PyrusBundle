@@ -8,27 +8,27 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\phpBB\PyrusBundle;
-use Symfony\Component\HttpKernel\Kernel;
+namespace phpBB\PyrusBundle;
+//use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Provides simplified access to Pyrus in symfony environment
  */
 class Pyrus
 {
-    protected $kernel;
+    protected $container;
     protected $frontend;
     protected $config;
 
     /**
      * Sets Pyrus up for later use
      *
-     * @param Kernel $kernel The application's kernel
+     * @param Container $container the dependency injection container
      */
-    public function __construct(Kernel $kernel, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
+    public function __construct(Container $container, \PEAR2\Pyrus\ScriptFrontend\Commands $frontend = null)
     {
-        $this->kernel = $kernel;
-
+        $this->container = $container;
         if (!file_exists($this->getPyrusDir())) {
             mkdir($this->getPyrusDir(), 0777, true);
         }
@@ -60,19 +60,20 @@ class Pyrus
             $this->config->saveConfig($this->getPearConfig());
             $this->readConfig();
 
-            $this->installCustomRole();
+    //        $this->installCustomRole();
         }
 
         // reset these paths every time, to allow moving the symfony directory
         // around
         // TODO: replace with configurable parameters
+        $root =  $this->container->getParameter('kernel.root_dir');
         $settings = array(
             //'ext_dir' => '@php_dir@/pyrus/ext',
             //'doc_dir' => '@php_dir@/pyrus/docs',
-            'bin_dir' => $this->kernel->getRootDir() . '/bin',
+            'bin_dir' => $root . '/bin',
             //'data_dir' => '@php_dir@/pyrus/data',
             //'cfg_dir' => '@php_dir@/pyrus/cfg',
-            'www_dir' => $this->kernel->getRootDir() . '/web',
+            'www_dir' => $root . '/web',
             //'test_dir' => '@php_dir@/pyrus/tests',
             //'src_dir' => '@php_dir@/pyrus/src',
             'auto_discover' => 1,
@@ -81,7 +82,7 @@ class Pyrus
             //'download_dir' => '@php_dir@/pyrus/downloads',
             //'plugins_dir' => '@default_config_dir@',
 
-            'bundle_dir' => $this->getBundleDir(),
+            //'bundle_dir' => $this->getBundleDir(),
         );
 
         $options = array('plugin' => false);
@@ -160,7 +161,7 @@ class Pyrus
      */
     public function getPyrusDir()
     {
-        return $this->kernel->getRootDir() . '/../pear2/';
+        return $this->container->getParameter('kernel.root_dir') . "/../vendor/pear2";
     }
 
     /**
@@ -180,7 +181,8 @@ class Pyrus
      */
     public function getBundleDir()
     {
-        $bundleDirs = $this->kernel->getBundleDirs();
+      throw new \Exception("TODO!");
+        $bundleDirs = getBundleDirs();
 
         if (!isset($bundleDirs['Bundle'])) {
             throw new \RunTimeException("No BundleDir for namespace Bundle defined in Application Kernel.");
