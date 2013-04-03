@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Bundle\phpBB\PyrusBundle;
+namespace phpBB\PyrusBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
