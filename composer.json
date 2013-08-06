@@ -1,0 +1,29 @@
+{
+    "name": "naderman/pyrus-bundle",
+    "type": "symfony-bundle",
+    "description": "Integrates Pyrus, the management tool for PEAR2 packages, into Symfony",
+    "keywords": ["pyrus"],
+    "homepage": "https://github.com/naderman/PyrusBundle",
+    "license": "phpBB",
+    "authors": [
+        {
+            "name": "Nils Adermann"
+        },
+        {
+            "name": "Tarjei Huse"
+        },
+        {
+            "name": "Nicolas Nutten"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": ">=2.1"
+    },
+    "autoload": {
+        "psr-0": { "phpBB\\PyrusBundle": "" }
+    },
+    "target-dir": "phpBB\\PyrusBundle"
+}
